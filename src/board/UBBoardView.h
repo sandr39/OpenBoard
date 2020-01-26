@@ -143,6 +143,9 @@ private:
     QPointF mPreviousPoint;
     QPoint mMouseDownPos;
 
+    int mPreviousStylusTool;
+    bool mToolSwithed;
+
     bool mPenPressureSensitive;
     bool mMarkerPressureSensitive;
     bool mUseHighResTabletEvent;

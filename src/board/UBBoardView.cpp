@@ -369,10 +369,17 @@ void UBBoardView::handleTouchEvent(QTouchEvent *touchEvent)
 
             // TODO: move to settings.
             const qreal ERASER_TOUCH_AREA = 0.000005;
-            if (normTouchArea > ERASER_TOUCH_AREA)
+            if (touchEvent->type() == QEvent::TouchBegin && normTouchArea > ERASER_TOUCH_AREA)
             {
                 // TODO: switch tool.
+                mPreviousStylusTool = (UBStylusTool::Enum)UBDrawingController::drawingController ()->stylusTool ();
+                UBDrawingController::drawingController ()->setStylusTool(UBStylusTool::Eraser);
+                mToolSwithed = true;
                 qDebug() << ">>> Switch tool";
+            } else if (touchEvent->type() == QEvent::TouchEnd && mToolSwithed) {
+                UBDrawingController::drawingController ()->setStylusTool(mPreviousStylusTool);
+                mToolSwithed = false;
+                qDebug() << ">>> Switch tool back";
             }
         }
     }
@@ -1432,7 +1439,9 @@ void UBBoardView::mouseReleaseEvent (QMouseEvent *event)
         }
 
         if (mWidgetMoved) {
-            movingItem->setSelected(false);
+            if(movingItem){
+                movingItem->setSelected(false);
+            }
             movingItem = NULL;
             mWidgetMoved = false;
         }
