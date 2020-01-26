@@ -161,6 +161,8 @@ void UBBoardView::init ()
     setHorizontalScrollBarPolicy (Qt::ScrollBarAlwaysOff);
     setAcceptDrops (true);
 
+    setAttribute(Qt::WA_AcceptTouchEvents, true);
+
     mTabletStylusIsPressed = false;
     mMouseButtonIsPressed = false;
     mPendingStylusReleaseEvent = false;
@@ -333,7 +335,47 @@ bool UBBoardView::event (QEvent * e)
         }
     }
 
+    if (e->type() == QEvent::TouchBegin ||
+        e->type() == QEvent::TouchUpdate ||
+        e->type() == QEvent::TouchEnd)
+    {
+        QTouchEvent *touchEvent = dynamic_cast<QTouchEvent *>(e);
+        handleTouchEvent(touchEvent);
+    }
+
     return QGraphicsView::event (e);
+}
+
+void UBBoardView::handleTouchEvent(QTouchEvent *touchEvent)
+{
+    auto widgetSize = rect().size();
+    qDebug() << ">>> Widget size: " << widgetSize;
+
+    auto points = touchEvent->touchPoints();
+    if (!points.isEmpty())
+    {
+        qDebug() << ">>> Touch points count: " << points.count();
+
+        foreach (QTouchEvent::TouchPoint p, points)
+        {
+            auto pointSize = p.rect().size();
+            qDebug() << ">>> Point size: " << pointSize;
+
+            QSizeF normTouchSize = QSizeF(pointSize.width() / widgetSize.width(), pointSize.height() / widgetSize.height());
+            qreal normTouchArea = normTouchSize.width() * normTouchSize.height();
+
+            qDebug() << ">>> Norm point size: " << normTouchSize;
+            qDebug() << ">>> Norm touch area: " << normTouchArea;
+
+            // TODO: move to settings.
+            const qreal ERASER_TOUCH_AREA = 0.000005;
+            if (normTouchArea > ERASER_TOUCH_AREA)
+            {
+                // TODO: switch tool.
+                qDebug() << ">>> Switch tool";
+            }
+        }
+    }
 }
 
 void UBBoardView::tabletEvent (QTabletEvent * event)

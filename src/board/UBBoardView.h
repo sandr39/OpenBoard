@@ -127,6 +127,8 @@ private:
 
     QList<QUrl> processMimeData(const QMimeData* pMimeData);
 
+    void handleTouchEvent(QTouchEvent *touchEvent);
+
     UBBoardController* mController;
 
     int mStartLayer, mEndLayer;
