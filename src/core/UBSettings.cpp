@@ -698,6 +698,14 @@ QList<QColor> UBSettings::markerColors(bool onDarkBackground)
 }
 
 //----------------------------------------//
+// switching to eraser
+
+qreal UBSettings::minTouchAreaToSwitchToEraser()
+{
+    return value("Board/MinSquareToSwithToEraser", 0.000005).toReal();
+}
+
+//----------------------------------------//
 // eraser
 
 int UBSettings::eraserWidthIndex()

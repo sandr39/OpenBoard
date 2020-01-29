@@ -368,9 +368,8 @@ void UBBoardView::handleTouchEvent(QTouchEvent *touchEvent)
             qDebug() << ">>> Norm point size: " << normTouchSize;
             qDebug() << ">>> Norm touch area: " << normTouchArea;
 
-            // TODO: move to settings.
-            const qreal ERASER_TOUCH_AREA = 0.000005;
-            if (touchEvent->type() == QEvent::TouchBegin && normTouchArea > ERASER_TOUCH_AREA)
+            const qreal minAreaToSwitch = UBSettings::settings()->minTouchAreaToSwitchToEraser();
+            if (touchEvent->type() == QEvent::TouchBegin && normTouchArea > minAreaToSwitch)
             {
                 // TODO: switch tool.
                 mPreviousStylusTool = (UBStylusTool::Enum)UBDrawingController::drawingController ()->stylusTool ();

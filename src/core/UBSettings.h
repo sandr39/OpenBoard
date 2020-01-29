@@ -78,6 +78,9 @@ class UBSettings : public QObject
         QColor markerColor(bool onDarkBackground);
         QList<QColor> markerColors(bool onDarkBackground);
 
+        // Switch to eraser
+        qreal minTouchAreaToSwitchToEraser();
+
         // Eraser related
         int eraserWidthIndex();
         qreal eraserFineWidth();
