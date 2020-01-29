@@ -97,6 +97,7 @@ UBBoardView::UBBoardView (UBBoardController* pController, QWidget* pParent, bool
     , mMultipleSelectionIsEnabled(false)
     , bIsControl(isControl)
     , bIsDesktop(isDesktop)
+    , mToolSwitched(false)
 {
     init ();
 
@@ -374,11 +375,11 @@ void UBBoardView::handleTouchEvent(QTouchEvent *touchEvent)
                 // TODO: switch tool.
                 mPreviousStylusTool = (UBStylusTool::Enum)UBDrawingController::drawingController ()->stylusTool ();
                 UBDrawingController::drawingController ()->setStylusTool(UBStylusTool::Eraser);
-                mToolSwithed = true;
+                mToolSwitched = true;
                 qDebug() << ">>> Switch tool";
-            } else if (touchEvent->type() == QEvent::TouchEnd && mToolSwithed) {
+            } else if (touchEvent->type() == QEvent::TouchEnd && mToolSwitched) {
                 UBDrawingController::drawingController ()->setStylusTool(mPreviousStylusTool);
-                mToolSwithed = false;
+                mToolSwitched = false;
                 qDebug() << ">>> Switch tool back";
             }
         }
@@ -1276,6 +1277,12 @@ void UBBoardView::mouseMoveEvent (QMouseEvent *event)
 
 void UBBoardView::mouseReleaseEvent (QMouseEvent *event)
 {
+    if (mToolSwitched) {
+        UBDrawingController::drawingController ()->setStylusTool(mPreviousStylusTool);
+        mToolSwitched = false;
+        qDebug() << ">>> Switch tool back in mouseRelease";
+    }
+
     UBStylusTool::Enum currentTool = (UBStylusTool::Enum)UBDrawingController::drawingController ()->stylusTool ();
 
     setToolCursor (currentTool);

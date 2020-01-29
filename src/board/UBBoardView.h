@@ -144,7 +144,7 @@ private:
     QPoint mMouseDownPos;
 
     int mPreviousStylusTool;
-    bool mToolSwithed;
+    bool mToolSwitched;
 
     bool mPenPressureSensitive;
     bool mMarkerPressureSensitive;
